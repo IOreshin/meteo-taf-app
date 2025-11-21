@@ -16,7 +16,7 @@ export function InputFrame({isMainGroup, frameId}) {
                 [field]: value
             }
         }));
-        //console.log(inputData);
+        console.log(inputData);
     }
 
     return (
