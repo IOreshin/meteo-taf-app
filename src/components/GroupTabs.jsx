@@ -3,12 +3,13 @@ import "./GroupTabs.css"
 import { Tabs } from "antd"
 import { InputFrame } from "./InputFrame"
 import { useRef, useState } from "react"
+import { useProject } from "../context/ProjectContext"
 
 const defaultTabs = [
     {
         key: '1',
         label: 'Основная группа',
-        children: <InputFrame/>,
+        children: <InputFrame isMainGroup={true} frameId={0}/>,
         closable : false,
     }
 ]
@@ -17,7 +18,7 @@ export function GroupTabs() {
     const newTabIndex = useRef(2);
     const [items, setItems] = useState(defaultTabs);
     const [activeKey, setActiveKey] = useState(defaultTabs[0].key);
-
+    const {inputData, setInputData} = useProject();
 
     const onChange = (key) => {
         setActiveKey(key);
@@ -28,7 +29,7 @@ export function GroupTabs() {
         const newPanes = [...items];
         newPanes.push({
             label: `Группа ${items.length}`,
-            children: <InputFrame/>,
+            children: <InputFrame isMainGroup={false} frameId={newActiveKey}/>,
             key: newActiveKey
         });
         setItems(newPanes);
@@ -59,10 +60,15 @@ export function GroupTabs() {
             }
         });
 
+        setInputData(prev => {
+            const updated = { ...prev };
+            delete updated[targetKey];
+            return updated;
+        });
+
         setItems(newPanes);
         setActiveKey(newActiveKey);
     }
-
 
     const onEdit = (targetKey, action) => {
         if (action === 'add') {

@@ -233,5 +233,12 @@
       "type" : "TCU",
       "description" : "Облака кучево-дождевые или кучево-кучевые"
     }
+  ],
+  "airports" : [
+    { "code": "UUEE", "city": "Москва" },
+    { "code": "ULLI", "city": "Санкт-Петербург" },
+    { "code": "EDDF", "city": "Франкфурт" },
+    { "code": "ULMM", "city": "Мурманск" },
+    { "code": "ULMK", "city": "Апатиты"}
   ]
 }

@@ -8,9 +8,13 @@ export function useProject() {
 
 export function ProjectProvider({ children }) {
     const [config, setConfig] = useState(null);
+    const [inputData, setInputData] = useState(null);
 
     return (
-        <ProjectContext.Provider value={{ config, setConfig }}>
+        <ProjectContext.Provider value={{
+            config, setConfig,
+            inputData, setInputData
+        }}>
             {children}
         </ProjectContext.Provider>
     );

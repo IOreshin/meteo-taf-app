@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
-import { InputFrame } from "./components/InputFrame";
 import { OutputFrame } from "./components/OutputFrame";
-import { Flex, Layout } from 'antd';
+import {  Layout } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 import { GroupTabs } from "./components/GroupTabs";
+import { useProject } from "./context/ProjectContext";
 
 function App() {
-  const [config, setConfig] = useState(null);
+  const {config, setConfig} = useProject();
 
   useEffect(() => {
     async function load_config() {
@@ -33,7 +33,6 @@ function App() {
           <Layout>
             <Header>meteo-taf</Header>
             <Content style={{ display: "flex", flexDirection: "column" }}>
-              {/* <InputFrame/> */}
               <GroupTabs/>
               <OutputFrame/>
             </Content>
