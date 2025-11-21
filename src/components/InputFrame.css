@@ -1,0 +1,5 @@
+.input-frame {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 8px;
+}
