@@ -26,6 +26,23 @@ export function GroupTabs() {
 
     const add = () => {
         const newActiveKey = newTabIndex.current++;
+
+        setInputData(prev => ({
+            ...prev,
+            [newActiveKey]: {
+                group_type: "TEMPO",                   
+                issue_time: prev[0]?.["issue_time"] || "",
+                time_from: "",
+                time_to: "",
+                wind_dir: "",
+                wind_speed: "",
+                wind_gust: "",
+                visibility: "",
+                weather_events: [],
+                clouds_entries: []
+            }
+        }));
+
         const newPanes = [...items];
         newPanes.push({
             label: `Группа ${items.length}`,

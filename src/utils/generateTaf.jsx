@@ -10,24 +10,27 @@ export function generateTaf(data) {
 
     const wind_gust = data.wind_gust !== "" && data.wind_gust !== undefined
         ? `G${data.wind_gust}`
-        : 0;
+        : "";
 
     const weather_events = data.weather_events || [];
-    const clouds_entries = data.clouds_entries || [];
+    const clouds_entries = data.clouds_entries
+        ? Object.values(data.clouds_entries)
+        : [];
 
+    console.log(clouds_entries);
     const clouds_str = clouds_entries
         .map(c => `${c.amount}${c.height}${c.cloud_type || ""}`)
         .join(" ");
 
-    const weather_str = weather_events.length ? weather_events.join(" ") : "NSW";
+    const weather_str = weather_events.length ? weather_events.join(" ") : "NSW ";
 
     if (!data.group_type) {
         return (
             `TAF ${icao} ${issue_time}Z ` +
             `${time_from}/${time_to} ` +
             `${wind_dir.toString().padStart(3, "0")}` +
-            `${wind_speed.toString().padStart(1, "0")}${wind_gust}MPS ` +
-            `${visibility} ${weather_str} ${clouds_str}`
+            `${wind_speed.toString().padStart(2, "0")}${wind_gust}MPS ` +
+            `${visibility} ${weather_str}${clouds_str}`
         );
     }
 
@@ -35,7 +38,7 @@ export function generateTaf(data) {
         `${data.group_type} ${time_from}/${time_to} ` +
         `${wind_dir.toString().padStart(3, "0")}` +
         `${wind_speed.toString().padStart(2, "0")}MPS ` +
-        `${visibility} ${weather_str} ${clouds_str}`
+        `${visibility} ${weather_str}${clouds_str}`
     );
 }
 
@@ -57,5 +60,6 @@ export function generateTafAllGroups(inputData) {
         result.push(tafLine);
     }
 
+    result[result.length - 1] = result[result.length - 1] + "=";
     return result.join("\n");
 }
