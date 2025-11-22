@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 src-tauri/binaries
+src-tauri/python-3.13.9-embed-amd64
+src-tauri/out
