@@ -55,9 +55,9 @@ export function CloudsFrame({frameId}) {
     };
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div className="cloud-row-container">
             {Object.keys(clouds).map((key) => (
-                <div key={key} style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <div key={key} className="cloud-row">
                     <CloudRow
                         value={clouds[key]}
                         onChange={(v) => updateRow(key, v)}

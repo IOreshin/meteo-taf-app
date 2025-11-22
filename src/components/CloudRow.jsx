@@ -1,6 +1,6 @@
 import { AutoComplete, Input } from "antd";
 import { useProject } from "../context/ProjectContext";
-
+import "./CloudsFrame.css"
 
 export function CloudRow({value, onChange}){
     const {config} = useProject();
@@ -31,44 +31,51 @@ export function CloudRow({value, onChange}){
     };
 
     return (
-        <div>
+        <div className="cloud-row">
             {/* Количество */}
-            <AutoComplete
-                style={{ width: 150 }}
-                options={amountOptions}
-                value={amountValue}
-                placeholder="FEW / SCT / BKN ..."
-                filterOption={false}
-                onSelect={(v) => emit({ amount: v })}
-                onChange={(v) => emit({ amount: v })}
-            >
-                <Input />
-            </AutoComplete>
+            <div className="cloud-row-item">
+                <AutoComplete
+                    style={{ width: 120 }}
+                    options={amountOptions}
+                    value={amountValue}
+                    placeholder="FEW / SCT / BKN ..."
+                    filterOption={false}
+                    onSelect={(v) => emit({ amount: v })}
+                    onChange={(v) => emit({ amount: v })}
+                >
+                    <Input />
+                </AutoComplete>
+            </div>
+            
             {/* Высота */}
-            <AutoComplete
-                style={{ width: 120 }}
-                options={heightOptions}
-                value={heightValue}
-                placeholder="Высота (030)"
-                filterOption={false}
-                onSelect={(v) => emit({ height: v })}
-                onChange={(v) => emit({ height: v })}
-            >
-                <Input />
-            </AutoComplete>
+            <div className="cloud-row-item">
+                <AutoComplete
+                    style={{ width: 120 }}
+                    options={heightOptions}
+                    value={heightValue}
+                    placeholder="Высота (030)"
+                    filterOption={false}
+                    onSelect={(v) => emit({ height: v })}
+                    onChange={(v) => emit({ height: v })}
+                >
+                    <Input />
+                </AutoComplete>
+            </div>
 
             {/* Тип облаков */}
-            <AutoComplete
-                style={{ width: 150 }}
-                options={typeOptions}
-                value={typeValue}
-                placeholder="CB / TCU / ..."
-                filterOption={false}
-                onSelect={(v) => emit({ cloud_type: v })}
-                onChange={(v) => emit({ cloud_type: v })}
-            >
-                <Input />
-            </AutoComplete>
+            <div className="cloud-row-item">
+                <AutoComplete
+                    style={{ width: 120 }}
+                    options={typeOptions}
+                    value={typeValue}
+                    placeholder="CB / TCU / ..."
+                    filterOption={false}
+                    onSelect={(v) => emit({ cloud_type: v })}
+                    onChange={(v) => emit({ cloud_type: v })}
+                >
+                    <Input />
+                </AutoComplete>
+            </div>
         </div>
     )
 }

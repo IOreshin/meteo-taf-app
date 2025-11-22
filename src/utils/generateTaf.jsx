@@ -17,12 +17,11 @@ export function generateTaf(data) {
         ? Object.values(data.clouds_entries)
         : [];
 
-    console.log(clouds_entries);
-    const clouds_str = clouds_entries
+    const clouds_str = clouds_entries.length > 0 ? clouds_entries
         .map(c => `${c.amount}${c.height}${c.cloud_type || ""}`)
-        .join(" ");
+        .join(" ") : "";
 
-    const weather_str = weather_events.length ? weather_events.join(" ") : "NSW ";
+    const weather_str = weather_events.length ? weather_events.join(" ") : "NSW";
 
     if (!data.group_type) {
         return (
@@ -30,15 +29,15 @@ export function generateTaf(data) {
             `${time_from}/${time_to} ` +
             `${wind_dir.toString().padStart(3, "0")}` +
             `${wind_speed.toString().padStart(2, "0")}${wind_gust}MPS ` +
-            `${visibility} ${weather_str}${clouds_str}`
+            `${visibility} ${weather_str}${clouds_str != "" ? " "+clouds_str : ""}`
         );
     }
 
     return (
         `${data.group_type} ${time_from}/${time_to} ` +
         `${wind_dir.toString().padStart(3, "0")}` +
-        `${wind_speed.toString().padStart(2, "0")}MPS ` +
-        `${visibility} ${weather_str}${clouds_str}`
+        `${wind_speed.toString().padStart(2, "0")}${wind_gust}MPS ` +
+        `${visibility} ${weather_str}${clouds_str != "" ? " "+clouds_str : ""}`
     );
 }
 
