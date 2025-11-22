@@ -1,19 +1,16 @@
-// Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::command;
+use tauri::{command};
 use std::fs;
 use std::path::PathBuf;
 use serde_json::Value;
 
+// ---- твоя команда для JSON ----
 #[command]
 fn load_json() -> Result<Value, String> {
-    // Путь рядом с exe
     let mut exe_dir = std::env::current_exe().map_err(|e| e.to_string())?;
     exe_dir.pop();
     let release_path = exe_dir.join("config.json");
-
-    // Путь в dev-режиме
     let dev_path = PathBuf::from("./config.json");
 
     let path_to_use = if release_path.exists() {
@@ -25,16 +22,15 @@ fn load_json() -> Result<Value, String> {
     };
 
     let content = fs::read_to_string(path_to_use).map_err(|e| e.to_string())?;
-
     serde_json::from_str(&content).map_err(|e| e.to_string())
 }
 
-
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_python::init())
         .invoke_handler(tauri::generate_handler![load_json])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-    meteo_taf_app_lib::run()
-}
 
+    meteo_taf_app_lib::run();
+}

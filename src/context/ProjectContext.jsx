@@ -14,10 +14,10 @@ export function ProjectProvider({ children }) {
             issue_time: "",
             time_from: "",
             time_to: "",
-            wind_dir: "",
-            wind_speed: "",
-            visibility: "",
-            wind_gust: "",
+            wind_dir: 0,
+            wind_speed: 0,
+            visibility: 0,
+            wind_gust: 0,
             weather_events: [],
             clouds_entries: []
         }

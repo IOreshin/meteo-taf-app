@@ -6,9 +6,38 @@ import {  Layout } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 import { GroupTabs } from "./components/GroupTabs";
 import { useProject } from "./context/ProjectContext";
+import { ValidationPanel } from "./components/ValidationPanel";
+import { runPython, callFunction } from "tauri-plugin-python-api";
+
+async function validateAllData(data, rules) {
+  try {
+    const result = await callFunction("validate_all_data", [data, rules]);
+    return result;
+  } catch (err) {
+    console.log(err);
+    return ["Python error"];
+  }
+}
 
 function App() {
-  const {config, setConfig} = useProject();
+  const {config, setConfig, inputData} = useProject();
+  const [errors, setErrors] = useState([]);
+
+  useEffect(() => {
+    if (!config) return;
+
+    (async () => {
+      const rulesForPython = {
+        checks: config.checks,
+        weather_code_rules: config.weather_code_rules
+      };
+
+      const errors = await validateAllData(inputData, rulesForPython);
+      const parsedErrors = JSON.parse(errors);
+      setErrors(parsedErrors);
+
+    })();
+  }, [inputData]);
 
   useEffect(() => {
     async function load_config() {
@@ -23,7 +52,6 @@ function App() {
     if (!config) {
       load_config();
     }
-
   }, [])
 
   return (
@@ -35,6 +63,7 @@ function App() {
             <Content style={{ display: "flex", flexDirection: "column" }}>
               <GroupTabs/>
               <OutputFrame/>
+              <ValidationPanel errors={errors}/>
             </Content>
           </Layout>
         </Layout>

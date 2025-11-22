@@ -8,7 +8,7 @@ export function generateTaf(data) {
     const wind_speed = parseInt(data.wind_speed || 0);
     const visibility = parseInt(data.visibility || 0);
 
-    const wind_gust = data.wind_gust !== "" && data.wind_gust !== undefined
+    const wind_gust = data.wind_gust !== "" && data.wind_gust !== undefined && data.wind_gust !== 0
         ? `G${data.wind_gust}`
         : "";
 

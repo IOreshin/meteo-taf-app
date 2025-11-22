@@ -1,15 +1,13 @@
 {
   "checks": [
-
-    {
-      "condition" : "((int(issue_time)/100)+1) > int(time_from)",
-      "message" : "Время выпуска не может быть позднее начала работы прогноза"
-    },
-    {
-      "condition" : "exists(wind_gust) and (to_int(wind_gust) - 5) < wind_speed",
-      "message" : "Порыв ветра должен превышать среднюю скорость ветра на 5 м/c"
-    }
-
+      {
+          "condition": "((to_int(issue_time)/100)+1) > to_int(time_from)",
+          "message": "Время выпуска не может быть позднее начала работы прогноза"
+      },
+      {
+          "condition": "exists(wind_gust) and to_int(wind_gust) != 0 and (to_int(wind_gust) - 5) < to_int(wind_speed)",
+          "message": "Порыв ветра должен превышать среднюю скорость ветра на 5 м/c"
+      }
   ],
 
   "weather_code_rules" : [
@@ -17,11 +15,11 @@
       "code" : "+SN",
       "conditions" : [
         {
-          "check": "visibility <= 1500",
+          "check": "to_int(visibility) <= 1500",
           "message": "При сильном снеге видимость должна быть ≤ 1500 м"
         },
         {
-          "check" : "wind_speed > 20",
+          "check" : "to_int(wind_speed) < 20",
           "message" : "При сильном снеге не может быть такого ветра"
         }
       ]
@@ -30,7 +28,7 @@
       "code" : "FG",
       "conditions" : [
         {
-          "check": "visibility <= 1000",
+          "check": "to_int(visibility) <= 1000",
           "message": "При тумане видимость должна быть ≤ 1000 м"
         }
       ]
