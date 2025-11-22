@@ -4,7 +4,8 @@ import { AirportSelect } from "./AirportSelect";
 import { useState } from "react";
 const { Option } = Select;
 import { useProject } from "../context/ProjectContext";
-import { CloudsFrame } from "./CloudsFrame";
+import { CloudsFrame } from "./CloudsInput/CloudsFrame";
+import { WeatherEventsFrame } from "./WeatherEventsInput/WeatherEventsFrame";
 
 export function InputFrame({isMainGroup, frameId}) {
     const {inputData, setInputData} = useProject();
@@ -101,13 +102,7 @@ export function InputFrame({isMainGroup, frameId}) {
             </div>
 
             <CloudsFrame frameId={frameId}/>
-            {/* <Space>
-                <Button type="primary">Добавить облачность</Button>
-            </Space> */}
-
-            <Space>
-                <Button type="primary">Добавить явление</Button>
-            </Space>
+            <WeatherEventsFrame frameId={frameId}/>
         </div>
     )
 }

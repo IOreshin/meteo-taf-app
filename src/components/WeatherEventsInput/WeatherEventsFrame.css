@@ -1,0 +1,24 @@
+
+.weather-events-row-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10;
+    background-color: rgb(142, 200, 248);
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.weather-event-row{
+    display: flex;
+    gap: 8;
+    align-items: center;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    background-color:  rgb(178, 208, 253);
+    margin: 0.25rem;
+    border-radius: 0.5rem;
+}
+
+.weather-event-item{
+    padding-right: 1rem;
+}

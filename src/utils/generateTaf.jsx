@@ -12,16 +12,23 @@ export function generateTaf(data) {
         ? `G${data.wind_gust}`
         : "";
 
-    const weather_events = data.weather_events || [];
+    const weather_events = data.weather_events 
+        ? Object.values(data.weather_events)
+        : [];
+    const weather_str = weather_events.length > 0
+        ? weather_events
+        .map(c=> `${c.intensity}${c.descriptor}${c.weather_event || ""}`)
+        .join(" ")
+        : "NSW"
+
     const clouds_entries = data.clouds_entries
         ? Object.values(data.clouds_entries)
         : [];
-
-    const clouds_str = clouds_entries.length > 0 ? clouds_entries
+    const clouds_str = clouds_entries.length > 0 
+        ? clouds_entries
         .map(c => `${c.amount}${c.height}${c.cloud_type || ""}`)
-        .join(" ") : "";
-
-    const weather_str = weather_events.length ? weather_events.join(" ") : "NSW";
+        .join(" ") 
+        : "";
 
     if (!data.group_type) {
         return (
