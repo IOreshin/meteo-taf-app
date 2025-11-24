@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { Children, useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import { OutputFrame } from "./components/OutputFrame";
-import {  Layout } from 'antd';
+import {  Layout, Tabs } from 'antd';
 const { Header, Footer, Sider, Content } = Layout;
 import { GroupTabs } from "./components/GroupTabs";
 import { useProject } from "./context/ProjectContext";
 import { ValidationPanel } from "./components/ValidationPanel";
-import { runPython, callFunction } from "tauri-plugin-python-api";
+import { callFunction } from "tauri-plugin-python-api";
+import { ConditionsPanel } from "./components/ConditionsPanel/ConditionsPanel";
+
 
 async function validateAllData(data, rules) {
   try {
@@ -22,6 +24,27 @@ async function validateAllData(data, rules) {
 function App() {
   const {config, setConfig, inputData} = useProject();
   const [errors, setErrors] = useState([]);
+
+  const appTabs = [
+    {
+      key: '1',
+      label: 'Составление прогноза',
+      children: 
+        <div>
+          <GroupTabs />
+          <OutputFrame />
+          <ValidationPanel errors={errors} />
+        </div>
+    },
+    {
+      key: '2',
+      label: 'Управление условиями',
+      children:
+        <div>
+          <ConditionsPanel />
+        </div>
+    }
+  ]
 
   useEffect(() => {
     if (!config) return;
@@ -61,9 +84,10 @@ function App() {
           <Layout>
             <Header>meteo-taf</Header>
             <Content style={{ display: "flex", flexDirection: "column" }}>
-              <GroupTabs/>
-              <OutputFrame/>
-              <ValidationPanel errors={errors}/>
+              <Tabs 
+                items={appTabs}
+                type="card"
+              />
             </Content>
           </Layout>
         </Layout>
