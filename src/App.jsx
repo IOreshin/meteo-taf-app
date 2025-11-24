@@ -9,7 +9,7 @@ import { useProject } from "./context/ProjectContext";
 import { ValidationPanel } from "./components/ValidationPanel";
 import { callFunction } from "tauri-plugin-python-api";
 import { ConditionsPanel } from "./components/ConditionsPanel/ConditionsPanel";
-
+import { Validator } from "./components/Validator/Validator";
 
 async function validateAllData(data, rules) {
   try {
@@ -24,6 +24,7 @@ async function validateAllData(data, rules) {
 function App() {
   const {config, setConfig, inputData} = useProject();
   const [errors, setErrors] = useState([]);
+
 
   const appTabs = [
     {
@@ -47,20 +48,12 @@ function App() {
   ]
 
   useEffect(() => {
-    if (!config) return;
+    if (!config?.common_conditions) return;
+    const validator = new Validator(config.common_conditions, inputData);
+    const validatedErrors = validator.validate();
+    setErrors(validatedErrors);
 
-    (async () => {
-      const rulesForPython = {
-        checks: config.checks,
-        weather_code_rules: config.weather_code_rules
-      };
-
-      const errors = await validateAllData(inputData, rulesForPython);
-      const parsedErrors = JSON.parse(errors);
-      setErrors(parsedErrors);
-
-    })();
-  }, [inputData]);
+  }, [inputData, config]);
 
   useEffect(() => {
     async function load_config() {
