@@ -24,13 +24,15 @@ export function ProjectProvider({ children }) {
     const [appData, setAppData] = useState(null);
     const [airports, setAirports] = useState(null);
     const [validationRules, setValidationRules] = useState(null);
+    const [appDataNeedReload, setAppDataNeedReload] = useState(true);
 
     return (
         <ProjectContext.Provider value={{
             inputData, setInputData,
             appData, setAppData,
             airports, setAirports,
-            validationRules, setValidationRules
+            validationRules, setValidationRules,
+            appDataNeedReload, setAppDataNeedReload
         }}>
             {children}
         </ProjectContext.Provider>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Select, Input, Checkbox, Button, Card, Space, Divider } from "antd";
+import { Form, Select, Input, Checkbox, Button, Card, Space, Divider, AutoComplete } from "antd";
 import { useProject } from "../../context/ProjectContext";
 import { DeleteOutlined } from "@ant-design/icons";
 import { invoke } from "@tauri-apps/api/core";
@@ -13,13 +13,15 @@ const funcs = [
 const operators = ["==", "!=", "<", ">", "<=", ">="];
 
 export function AddRule() {
-  const {validationRules, appData} = useProject();
+  const {validationRules, appData, setAppDataNeedReload} = useProject();
   const [blocks, setBlocks] = useState([
     { field: "", func: "", operator: "", value: "", valueIsField: false, logicLink: "None" }
   ]);
   const [message, setMessage] = useState("");
   const [ruleType, setRuleType] = useState("common");
   const [selectedCode, setSelectedCode] = useState("");
+
+  const [codeOptions, setCodeOptions] = useState([]);
 
   useEffect(() => {
     if (validationRules?.rules_by_code?.length > 0) {
@@ -71,8 +73,35 @@ export function AddRule() {
         rule: rule
       });
     }
+
+    setAppDataNeedReload(true);
   };
 
+  const getWeatherOptions = () => {
+    const options = []
+
+    for (const intensity of appData.intensity)
+    {
+      for (const descriptor of appData.descriptor)
+      {
+        for (const weatherEvent of appData.weather_events)
+        {
+          if (weatherEvent.event != "") {
+            options.push({
+              label: `${intensity.intensity}${descriptor.descriptor}${weatherEvent.event}`,
+              value: `${intensity.intensity}${descriptor.descriptor}${weatherEvent.event}`,
+            })
+          };
+        };
+      };
+    };
+
+    return options;
+  };
+
+  useEffect(()=>{
+    setCodeOptions(getWeatherOptions());
+  }, [])
 
   return (
     <div>
@@ -99,15 +128,14 @@ export function AddRule() {
             size="small"
             type="inner"
           >
-            <Select
-              value={selectedCode}
-              style={{width: 120}}
-              options={validationRules.rules_by_code.map((x) => ({
-                value: x.code,
-                label: x.code
-              }))}
+            <AutoComplete
+              options={codeOptions}
+              onSelect={(v) => setSelectedCode(v)}
               onChange={(v) => setSelectedCode(v)}
-            />
+              placeholder="Введите код"
+            >
+              <Input />
+            </AutoComplete>
           </Card>
         )}
       </Space>
@@ -254,6 +282,11 @@ export function AddRule() {
             onClick={() => saveNewRule()}
           >
             Сохранить условие
+          </Button>
+          <Button
+            onClick={() => getWeatherOptions()}
+          >
+            Тест
           </Button>
         </Space>
       </Card>

@@ -20,7 +20,10 @@ async function load_config(name) {
 }
 
 function App() {
-  const {inputData, appData, setAppData, airports, setAirports, validationRules, setValidationRules} = useProject();
+  const {inputData, appData, setAppData, 
+        airports, setAirports, 
+        validationRules, setValidationRules,
+        appDataNeedReload, setAppDataNeedReload} = useProject();
   const [errors, setErrors] = useState([]);
 
   const appTabs = [
@@ -55,25 +58,25 @@ function App() {
   useEffect(() => {
     const fetchConfigs = async () => {
       try {
-        if (!appData) {
-          const appContent = await load_config("app-data.json");
-          setAppData(appContent);
-        }
-        if (!airports) {
-          const airportsContent = await load_config("airports.json");
-          setAirports(airportsContent.airports);
-        }
-        if (!validationRules) {
-          const validationRulesContent = await load_config("validation-rules.json");
-          setValidationRules(validationRulesContent);
-        }
+        const appContent = await load_config("app-data.json");
+        setAppData(appContent);
+
+        const airportsContent = await load_config("airports.json");
+        setAirports(airportsContent.airports);
+
+        const validationRulesContent = await load_config("validation-rules.json");
+        setValidationRules(validationRulesContent);
       } catch (err) {
         console.error("Ошибка загрузки конфигов:", err);
       }
     };
+    if (appDataNeedReload)
+    {
+      fetchConfigs();
+      setAppDataNeedReload(false);
+    }
 
-    fetchConfigs();
-  }, []);
+  }, [appDataNeedReload]);
 
   return (
     <div className="app-main">
