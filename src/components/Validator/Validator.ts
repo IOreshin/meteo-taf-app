@@ -38,13 +38,30 @@ class ExpressionEvaluator {
     }
 }
 
+export interface RulesByCode {
+    code: string;
+    rules: CommonCondition[];
+}
+
+interface WeatherEvent {
+    intensity: string;
+    descriptor: string;
+    weather_events: string;
+    weather_event: string;
+}
+
 export class Validator {
     private rules: CommonCondition[];
+    private rulesByCode: RulesByCode[];
     private flatDataArray: Record<string, any>[];
 
-    constructor(rules: CommonCondition[], inputData: Record<string, any>) {
+    constructor(
+        rules: CommonCondition[],
+        rulesByCode: RulesByCode[],
+        inputData: Record<string, any>
+    ) {
         this.rules = rules;
-
+        this.rulesByCode = rulesByCode,
         this.flatDataArray = Object.values(inputData).map(entry => {
             const flat: Record<string, any> = {};
             for (const key in entry) {
@@ -104,32 +121,46 @@ export class Validator {
         }
     }
 
+    private checkRule(rule: CommonCondition, data: Record<string, any>): boolean {
+        let result = true;
+
+        for (const block of rule.conditions) {
+            const leftVal = this.evalNode(block.left, data);
+            const rightVal = this.evalNode(block.right, data);
+            const blockResult = this.compare(leftVal, block.operator, rightVal);
+
+            switch (block.logic_link) {
+                case "None": result = blockResult; break;
+                case "AND": result = result && blockResult; break;
+                case "OR":  result = result || blockResult; break;
+            }
+        }
+
+        return result;
+    }
+
     validate() : string[] {
         const errors: string[] = [];
 
         for (const data of this.flatDataArray)
         {
             for (const rule of this.rules) {
-                let result = true;
+                if (this.checkRule(rule, data)) {
+                    errors.push(rule.message);
+                }
+            }
 
-                for (const block of rule.conditions) {
-                    const leftVal = this.evalNode(block.left, data);
-                    const rightVal = this.evalNode(block.right, data);
-                    const blockResult = this.compare(leftVal, block.operator, rightVal);
-                    switch (block.logic_link) {
-                        case "None": 
-                            result = blockResult;
-                            break;
-                        case "AND": 
-                            result = result && blockResult;
-                            break;
-                        case "OR": 
-                            result = result || blockResult;
-                            break;
+            const eventsObj = data.weather_events;
+            if (eventsObj && typeof eventsObj === "object") {
+                for (const event of Object.values(eventsObj) as WeatherEvent[]) {
+                    const combinedCode = `${event.intensity}${event.descriptor}${event.weather_event}`;
+                    const matched = this.rulesByCode.find(r => r.code === combinedCode);
+                    if (matched) {
+                        for (const rule of matched.rules) {
+                            if (this.checkRule(rule, data)) errors.push(rule.message);
+                        }
                     }
                 }
-
-                if (result) errors.push(rule.message);
             }
         }
 

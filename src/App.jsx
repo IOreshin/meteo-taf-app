@@ -46,7 +46,7 @@ function App() {
 
   useEffect(() => {
     if (!validationRules?.common_rules) return;
-    const validator = new Validator(validationRules.common_rules, inputData);
+    const validator = new Validator(validationRules.common_rules, validationRules.rules_by_code, inputData);
     const validatedErrors = validator.validate();
     setErrors(validatedErrors);
 

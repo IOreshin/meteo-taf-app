@@ -54,26 +54,50 @@
         }
     ],
 
-    "weather_code_rules" : [
+    "rules_by_code" : [
         {
             "code" : "+SN",
-            "conditions" : [
+            "rules" : [
                 {
-                    "check": "to_int(visibility) <= 1500",
-                    "message": "При сильном снеге видимость должна быть ≤ 1500 м"
-                },
-                {
-                    "check" : "to_int(wind_speed) < 20",
-                    "message" : "При сильном снеге не может быть такого ветра"
+                    "message": "При сильном снеге видимость должна быть ≤ 1500 м",
+                    "conditions": [
+                        {
+                            "logic_link": "None",
+                            "left": {
+                                "type": "field",
+                                "field": "visibility",
+                                "func": "to_int"
+                            },
+                            "operator": ">",
+                            "right": {
+                                "type": "value",
+                                "value": "1500"
+                            }
+                        }
+                    ]
                 }
             ]
-            },
-            {
-            "code" : "FG",
-            "conditions" : [
+        },
+        {
+            "code": "FG",
+            "rules": [
                 {
-                    "check": "to_int(visibility) <= 1000",
-                    "message": "При тумане видимость должна быть ≤ 1000 м"
+                    "message": "При тумане видимость должна быть < 1000 м",
+                    "conditions": [
+                        {
+                            "logic_link": "None",
+                            "left": {
+                                "type": "field",
+                                "field": "visibility",
+                                "func": "to_int"
+                            },
+                            "operator": ">",
+                            "right": {
+                                "type": "value",
+                                "value": "1000"
+                            }
+                        }
+                    ]
                 }
             ]
         }
