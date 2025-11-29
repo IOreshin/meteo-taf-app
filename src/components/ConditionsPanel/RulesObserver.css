@@ -1,0 +1,10 @@
+
+.select-options{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.select-options p{
+    padding: 5px;
+}

@@ -1,0 +1,263 @@
+import React, { useState, useEffect } from "react";
+import { Form, Select, Input, Checkbox, Button, Card, Space, Divider } from "antd";
+import { useProject } from "../../context/ProjectContext";
+import { DeleteOutlined } from "@ant-design/icons";
+import { invoke } from "@tauri-apps/api/core";
+
+const funcs = [
+  { label: "Нет", value: "" },
+  { label: "exists(x)", value: "exists" },
+  { label: "to_int(x)", value: "to_int" },
+];
+
+const operators = ["==", "!=", "<", ">", "<=", ">="];
+
+export function AddRule() {
+  const {validationRules, appData} = useProject();
+  const [blocks, setBlocks] = useState([
+    { field: "", func: "", operator: "", value: "", valueIsField: false, logicLink: "None" }
+  ]);
+  const [message, setMessage] = useState("");
+  const [ruleType, setRuleType] = useState("common");
+  const [selectedCode, setSelectedCode] = useState("");
+
+  useEffect(() => {
+    if (validationRules?.rules_by_code?.length > 0) {
+      setSelectedCode(validationRules.rules_by_code[0].code);
+    }
+  }, [validationRules]);
+
+  const updateBlock = (idx, key, val) => {
+    const newBlocks = [...blocks];
+    newBlocks[idx][key] = val;
+    setBlocks(newBlocks);
+  };
+
+  const addBlock = (logic) => {
+    setBlocks([
+      ...blocks,
+      {field: "", func: "", operator: "", value: "", valueIsField: false, logicLink: logic}
+    ]);
+  };
+
+  const deleteBlock = (id) => {
+    const newBlocks = blocks.filter((_, idx) => idx !== id);
+    setBlocks(newBlocks);
+  };
+
+  const saveNewRule = async () => {
+    const rule = {
+      message,
+      conditions: blocks.map((block) => ({
+        logic_link: block.logicLink,
+        left: {
+          type: block.func ? "expr" : "field",
+          field: block.field || null,
+          func: block.func || null,
+          expr: block.func ? "field" : null,
+        },
+        operator: block.operator,
+        right: block.valueIsField
+          ? { type: "field", field: block.value }
+          : { type: "value", value: block.value },
+      })),
+    };
+
+    if (ruleType === "common") {
+      await invoke("save_common_rule", { rule });
+    } else {
+      await invoke("save_code_rule", {
+        code: selectedCode,
+        rule: rule
+      });
+    }
+  };
+
+
+  return (
+    <div>
+      <Space>
+        <Card
+          title="Тип правила"
+          size="small"
+          type="inner"
+        >
+          <Select
+            value={ruleType}
+            style={{width: 200}}
+            options={[
+              { value: "common", label: "Общее правило" },
+              { value: "byCode", label: "Правило по коду" }
+            ]}
+            onChange={(v) => setRuleType(v)}
+          />
+        </Card>
+
+        {ruleType === "byCode" && (
+          <Card
+            title="Код явления"
+            size="small"
+            type="inner"
+          >
+            <Select
+              value={selectedCode}
+              style={{width: 120}}
+              options={validationRules.rules_by_code.map((x) => ({
+                value: x.code,
+                label: x.code
+              }))}
+              onChange={(v) => setSelectedCode(v)}
+            />
+          </Card>
+        )}
+      </Space>
+      <Card 
+        title="Добавить условие"
+        style={{width:"100%"}}
+      >
+        <Space
+          direction="vertical"
+          style={{width: "100%"}}
+        >
+          <div>
+            <Input 
+              placeholder="Введите сообщение о ошибке, которое будет отображаться при выполнении условий"
+              onChange={(v) => setMessage(v.target.value)}
+            />
+          </div>
+          {blocks.map((block, i) => (
+            <Card
+              key={i}
+              type="inner"
+              title={i == 0
+                    ?  `Блок условия ${i+1}`
+                    :  `Блок условия ${i+1}. Условие связи ${blocks[i].logicLink}`
+                    }
+              extra={i != 0
+                    ? <Button
+                      onClick={(event) => deleteBlock(i)}
+                      >
+                        <DeleteOutlined/>
+                      </Button>
+                    : <></>}
+            >
+              <Space
+                wrap
+                style={{width: "100%"}}
+              >
+                {/* ПОЛЕ */}
+                <Card
+                  type="inner"
+                  title="Поле"
+                  size="small"
+                >
+                  <Select
+                    placeholder="Поле"
+                    style={{width: "150px"}}
+                    value={block.field}
+                    onChange={(v) => updateBlock(i, "field", v)}
+                    options={appData.conditions.map(c => ({label: c.description, value: c.condition}))}
+                  />
+                </Card>
+
+                {/* ФУНКЦИЯ */}
+                <Card
+                  type="inner"
+                  title="Функция"
+                  size="small"
+                >
+                  <Select 
+                    placeholder="Функция"
+                    style={{width: "100px"}}
+                    value={block.func}
+                    onChange={(v) => updateBlock(i, "func", v)}
+                    options={funcs}
+                  />
+                </Card>
+
+                 {/* Оператор */}
+                {block.func !== "exists" && (
+                  <Card
+                    type="inner"
+                    title="Оператор"
+                    size="small"
+                  >
+                    <Select
+                      placeholder="Оператор"
+                      style={{ width: 120 }}
+                      value={block.operator}
+                      onChange={(v) => updateBlock(i, "operator", v)}
+                      options={operators.map(o => ({ label: o, value: o }))}
+                    />
+                  </Card>
+                )}
+
+                {/* Значение */}
+                {block.func !== "exists" && (
+                block.valueIsField ? (
+                    <Card
+                      type="inner"
+                      title="Тип поля"
+                      size="small"
+                    >
+                      <Select
+                      placeholder="Поле-значение"
+                      style={{ width: "auto" }}
+                      value={block.value}
+                      onChange={(v) => updateBlock(i, "value", v)}
+                      options={validationRules.conditions.map(c => ({ label: c.description, value: c.condition }))}
+                      />
+                    </Card>
+                ) : (
+                    <Card
+                      type="inner"
+                      title="Значение"
+                      size="small"
+                    >
+                      <Input
+                        placeholder="Значение"
+                        style={{ width: 150 }}
+                        value={block.value}
+                        onChange={(e) => updateBlock(i, "value", e.target.value)}
+                      />
+                    </Card>
+                )
+                )}
+
+                {/* Переключатель "значение = поле" */}
+                {block.func !== "exists" && (
+                <Checkbox
+                    checked={block.valueIsField}
+                    onChange={(e) => {
+                    updateBlock(i, "valueIsField", e.target.checked);
+
+                    // Если включили "значение = поле", сразу подставим первое поле
+                    if (e.target.checked) {
+                        updateBlock(i, "value", validationRules.conditions[0].condition);
+                    }
+                    }}
+                >
+                    Значение — поле
+                </Checkbox>
+                )}
+              </Space>
+
+              {i === blocks.length - 1 && (
+              <Space style={{ marginTop: 15 }}>
+                <Button onClick={() => addBlock("AND")}>+ AND</Button>
+                <Button onClick={() => addBlock("OR")}>+ OR</Button>
+              </Space>
+            )}
+            </Card>
+          ))}
+          <Button
+            onClick={() => saveNewRule()}
+          >
+            Сохранить условие
+          </Button>
+        </Space>
+      </Card>
+    </div>
+  )
+
+}

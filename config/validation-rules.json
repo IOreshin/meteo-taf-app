@@ -1,105 +1,150 @@
-{
-    "common_rules": [
+{   
+"common_rules": [
+    {
+      "message": "Время выпуска не может быть позднее начала работы прогноза",
+      "conditions": [
         {
-            "message":"Время выпуска не может быть позднее начала работы прогноза",
-            "conditions": [
-                {
-                    "logic_link": "None",
-                    "left": {
-                        "type": "expr",
-                        "field": "issue_time",
-                        "func": "to_int",
-                        "expr": "field/100+1"
-                    },
-                    "operator": ">",
-                    "right": {
-                        "type": "field",
-                        "field": "time_from",
-                        "func": "to_int"
-                    }
-                }
-            ]
+          "logic_link": "None",
+          "left": {
+            "type": "expr",
+            "field": "issue_time",
+            "func": "to_int",
+            "expr": "field/100+1",
+            "value": null
+          },
+          "operator": ">",
+          "right": {
+            "type": "field",
+            "field": "time_from",
+            "func": "to_int",
+            "expr": null,
+            "value": null
+          }
+        }
+      ]
+    },
+    {
+      "message": "Порыв ветра должен превышать среднюю скорость ветра на 5 м/c",
+      "conditions": [
+        {
+          "logic_link": "None",
+          "left": {
+            "type": "expr",
+            "field": "wind_speed",
+            "func": "to_int",
+            "expr": "field+5",
+            "value": null
+          },
+          "operator": ">",
+          "right": {
+            "type": "field",
+            "field": "wind_gust",
+            "func": "to_int",
+            "expr": null,
+            "value": null
+          }
         },
         {
-        "message": "Порыв ветра должен превышать среднюю скорость ветра на 5 м/c",
-            "conditions": [
-                {
-                    "logic_link": "None",
-                    "left": {
-                        "type": "expr",
-                        "field": "wind_speed",
-                        "func": "to_int",
-                        "expr": "field+5"
-                    },
-                    "operator": ">",
-                    "right": {
-                        "type": "field",
-                        "field": "wind_gust",
-                        "func": "to_int"
-                    }
-                    },
-                    {
-                    "logic_link": "AND",
-                    "left": {
-                        "type": "field",
-                        "field": "wind_gust"
-                    },
-                    "operator": "!=",
-                    "right": {
-                        "type": "value",
-                        "value" : "0"
-                    }
-                }
-            ]
+          "logic_link": "AND",
+          "left": {
+            "type": "field",
+            "field": "wind_gust",
+            "func": null,
+            "expr": null,
+            "value": null
+          },
+          "operator": "!=",
+          "right": {
+            "type": "value",
+            "field": null,
+            "func": null,
+            "expr": null,
+            "value": "0"
+          }
         }
-    ],
-
-    "rules_by_code" : [
+      ]
+    },
+    {
+      "message": "Порыв ветра не должен превышать 30 м/c",
+      "conditions": [
         {
-            "code" : "+SN",
-            "rules" : [
-                {
-                    "message": "При сильном снеге видимость должна быть ≤ 1500 м",
-                    "conditions": [
-                        {
-                            "logic_link": "None",
-                            "left": {
-                                "type": "field",
-                                "field": "visibility",
-                                "func": "to_int"
-                            },
-                            "operator": ">",
-                            "right": {
-                                "type": "value",
-                                "value": "1500"
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "code": "FG",
-            "rules": [
-                {
-                    "message": "При тумане видимость должна быть < 1000 м",
-                    "conditions": [
-                        {
-                            "logic_link": "None",
-                            "left": {
-                                "type": "field",
-                                "field": "visibility",
-                                "func": "to_int"
-                            },
-                            "operator": ">",
-                            "right": {
-                                "type": "value",
-                                "value": "1000"
-                            }
-                        }
-                    ]
-                }
-            ]
+          "logic_link": "None",
+          "left": {
+            "type": "expr",
+            "field": "wind_gust",
+            "func": "to_int",
+            "expr": "field",
+            "value": null
+          },
+          "operator": ">",
+          "right": {
+            "type": "value",
+            "field": null,
+            "func": null,
+            "expr": null,
+            "value": "30"
+          }
         }
-    ]
+      ]
+    }
+  ],
+  "rules_by_code": [
+    {
+      "code": "+SN",
+      "rules": [
+        {
+          "message": "При сильном снеге видимость должна быть ≤ 1500 м",
+          "conditions": [
+            {
+              "logic_link": "None",
+              "left": {
+                "type": "field",
+                "field": "visibility",
+                "func": "to_int",
+                "expr": null,
+                "value": null
+              },
+              "operator": ">",
+              "right": {
+                "type": "value",
+                "field": null,
+                "func": null,
+                "expr": null,
+                "value": "1500"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "code": "FG",
+      "rules": [
+        {
+          "message": "При тумане видимость должна быть < 1000 м",
+          "conditions": [
+            {
+              "logic_link": "None",
+              "left": {
+                "type": "field",
+                "field": "visibility",
+                "func": "to_int",
+                "expr": null,
+                "value": null
+              },
+              "operator": ">",
+              "right": {
+                "type": "value",
+                "field": null,
+                "func": null,
+                "expr": null,
+                "value": "1000"
+              }
+            }
+          ]
+        }
+      ]
+    }
+]
 }
+       

@@ -1,24 +1,24 @@
 import { Tabs } from "antd";
 import { useProject } from "../../context/ProjectContext"
 import "./ConditionsPanel.css"
-import { CommonConditions } from "./CommonConditions";
+import { RulesObserver } from "./RulesObserver";
+import { AddRule } from "./AddRule";
 
 export function ConditionsPanel() {
-    const {config} = useProject();
 
     const tabItems = [
         {
             key: "1",
-            label: "Общие условия",
+            label: "Обзор условий",
             children: 
-                <CommonConditions />
+                <RulesObserver />
         },
         {
             key: '2',
-            label: 'Условия по коду',
+            label: 'Добавить условие',
             children:
                 <div>
-                    Условия по коду
+                    <AddRule />
                 </div>
         }
     ]
@@ -26,7 +26,7 @@ export function ConditionsPanel() {
 
     return (
         <div>
-            <Tabs 
+            <Tabs
                 items={tabItems}
                 type="card"
             />

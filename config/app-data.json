@@ -184,5 +184,35 @@
             "type" : "TCU",
             "description" : "Облака кучево-дождевые или кучево-кучевые"
         }
-    ]
+    ],
+    "conditions": [
+    {
+      "condition": "issue_time",
+      "description": "Время выпуска"
+    },
+    {
+      "condition": "time_from",
+      "description": "Время действия от"
+    },
+    {
+      "condition": "time_to",
+      "description": "Время действия до"
+    },
+    {
+      "condition": "wind_dir",
+      "description": "Направление ветра"
+    },
+    {
+      "condition": "wind_speed",
+      "description": "Скорость ветра"
+    },
+    {
+      "condition": "wind_gust",
+      "description": "Порыв ветра"
+    },
+    {
+      "condition": "visibility",
+      "description": "Видимость"
+    }
+  ]
 }
