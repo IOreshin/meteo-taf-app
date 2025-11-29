@@ -1,14 +1,17 @@
 export function generateTaf(data) {
-    const icao = data.city || "";
-    const issue_time = data.issue_time || "";
-    const time_from = data.time_from || "";
-    const time_to = data.time_to || "";
+    const wind_dir = parseInt(data.wind_dir || 0) > 0 
+        ? parseInt(data.wind_dir).toString().padStart(3, "0")
+        : "";
 
-    const wind_dir = parseInt(data.wind_dir || 0);
-    const wind_speed = parseInt(data.wind_speed || 0);
-    const visibility = parseInt(data.visibility || 0);
+    const wind_speed = parseInt(data.wind_speed || 0) > 0
+        ? parseInt(data.wind_speed).toString().padStart(2, "0")
+        : "";
 
-    const wind_gust = data.wind_gust !== "" && data.wind_gust !== undefined && data.wind_gust !== 0
+    const visibility = parseInt(data.visibility || 0) > 0 
+        ? parseInt(data.visibility || 0)
+        : "";
+
+    const wind_gust = parseInt(data.wind_gust) > 0
         ? `G${data.wind_gust}`
         : "";
 
@@ -19,7 +22,7 @@ export function generateTaf(data) {
         ? weather_events
         .map(c=> `${c.intensity}${c.descriptor}${c.weather_event || ""}`)
         .join(" ")
-        : "NSW"
+        : ""
 
     const clouds_entries = data.clouds_entries
         ? Object.values(data.clouds_entries)
@@ -27,25 +30,21 @@ export function generateTaf(data) {
     const clouds_str = clouds_entries.length > 0 
         ? clouds_entries
         .map(c => `${c.amount}${c.height}${c.cloud_type || ""}`)
-        .join(" ") 
+        .join(" ")
         : "";
 
-    if (!data.group_type) {
-        return (
-            `TAF ${icao} ${issue_time}Z ` +
-            `${time_from}/${time_to} ` +
-            `${wind_dir.toString().padStart(3, "0")}` +
-            `${wind_speed.toString().padStart(2, "0")}${wind_gust}MPS ` +
-            `${visibility} ${weather_str}${clouds_str != "" ? " "+clouds_str : ""}`
-        );
-    }
+    const parts = [
+        `${!data.group_type ? "TAF" : data.group_type}`,
+        `${data.city ? data.city : ""}`,
+        `${!data.group_type && data.issue_time ? `${data.issue_time}Z` : ""}`,
+        `${data.time_from && data.time_to ? `${data.time_from}/${data.time_to}` : ""}`,
+        `${wind_dir}${wind_speed}${wind_gust}`,
+        visibility,
+        weather_str,
+        clouds_str
+    ];
 
-    return (
-        `${data.group_type} ${time_from}/${time_to} ` +
-        `${wind_dir.toString().padStart(3, "0")}` +
-        `${wind_speed.toString().padStart(2, "0")}${wind_gust}MPS ` +
-        `${visibility} ${weather_str}${clouds_str != "" ? " "+clouds_str : ""}`
-    );
+    return parts.filter(Boolean).join(" ")
 }
 
 export function generateTafAllGroups(inputData) {

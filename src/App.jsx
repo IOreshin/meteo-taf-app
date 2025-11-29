@@ -7,19 +7,8 @@ const { Header, Footer, Sider, Content } = Layout;
 import { GroupTabs } from "./components/GroupTabs";
 import { useProject } from "./context/ProjectContext";
 import { ValidationPanel } from "./components/ValidationPanel";
-import { callFunction } from "tauri-plugin-python-api";
 import { ConditionsPanel } from "./components/ConditionsPanel/ConditionsPanel";
 import { Validator } from "./components/Validator/Validator";
-
-async function validateAllData(data, rules) {
-  try {
-    const result = await callFunction("validate_all_data", [data, rules]);
-    return result;
-  } catch (err) {
-    console.log(err);
-    return ["Python error"];
-  }
-}
 
 function App() {
   const {config, setConfig, inputData} = useProject();
