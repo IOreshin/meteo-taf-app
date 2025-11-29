@@ -2,8 +2,36 @@ import { useEffect } from "react";
 import { useProject } from "../../context/ProjectContext"
 import "./CommonConditions.css"
 import React, {useState} from "react";
-import { message, Table } from "antd";
+import { Card, message, Table } from "antd";
 import { AddCommonCondition } from "./AddCommonCondition";
+
+
+function formatSide(side) {
+    if (!side) return "";
+
+    if (side.type === "field") {
+        return side.field;
+    }
+
+    if (side.type === "value") {
+        return side.value;
+    }
+
+    if (side.type === "expr") {
+        const expr = side.expr.replace("field", side.field);
+        return `${expr}`;
+    }
+
+    return "";
+}
+
+function formatCondition(c) {
+    const left = formatSide(c.left);
+    const right = formatSide(c.right);
+    const link = c.logic_link !== "None" ? `${c.logic_link} ` : "";
+
+    return `${link}${left} ${c.operator} ${right}`;
+}
 
 const columns = [
     {
@@ -25,40 +53,32 @@ const columns = [
 
 export function CommonConditions() {
     const {config} = useProject();
-    const [tableInfo, setTableInfo] = useState(null);
+    const [rules, setRules] = useState([]);
 
     useEffect(() => {
-        if (!config) return;
+        if (!config || !config.common_conditions) return;
 
-        if (!config.checks) return;
+        const res = config.common_conditions.map((rule, index) => ({
+            key: index,
+            message: rule.message,
+            conditions: rule.conditions.map(c => formatCondition(c))
+        }));
 
-        let i = 0;
-        let conditions = [];
-        for (const item of config.checks) {
-            i += 1;
-            conditions.push({
-                key: i,
-                index: i,
-                condition: item.condition,
-                message: item.message
-            });
-        }
-        setTableInfo(conditions);
+        setRules(res);
+    }, [config])
 
-    }, [config]);
-
-
-    return(
-        <div>
-            <Table
-                columns={columns}
-                dataSource={tableInfo}
-                size="small"
-                title={() => 'Список условий'}
-                pagination={{ pageSize: 50 }}
-                scroll={{ y: 50 * 5 }}
-            />
-            <AddCommonCondition />
+    return (
+        <div style={{display: "flex", flexDirection: "column", gap: 16}}>
+            {rules.map(rule => (
+                <Card key={rule.key} title={rule.message}>
+                    {rule.conditions.map((c, idx) => (
+                        <div key={idx} style={{paddingLeft: 10}}>
+                            {c}
+                        </div>
+                    ))}
+                </Card>
+            ))}
         </div>
     )
+
 }

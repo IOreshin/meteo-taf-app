@@ -47,7 +47,7 @@ function App() {
   useEffect(() => {
     async function load_config() {
       try {
-        const content = await invoke("load_json");
+        const content = await invoke("load_json", { jsonName: "config.json" });
         setConfig(content);
       } catch (err) {
         alert("Ошибка " + err);

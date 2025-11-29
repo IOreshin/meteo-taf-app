@@ -38,7 +38,7 @@ export function generateTaf(data) {
         `${data.city ? data.city : ""}`,
         `${!data.group_type && data.issue_time ? `${data.issue_time}Z` : ""}`,
         `${data.time_from && data.time_to ? `${data.time_from}/${data.time_to}` : ""}`,
-        `${wind_dir}${wind_speed}${wind_gust}`,
+        `${wind_dir}${wind_speed}${wind_gust}${wind_speed ? "MPS" : ""}`,
         visibility,
         weather_str,
         clouds_str
