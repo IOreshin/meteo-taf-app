@@ -10,10 +10,18 @@ import { ValidationPanel } from "./components/ValidationPanel";
 import { ConditionsPanel } from "./components/ConditionsPanel/ConditionsPanel";
 import { Validator } from "./components/Validator/Validator";
 
-function App() {
-  const {config, setConfig, inputData} = useProject();
-  const [errors, setErrors] = useState([]);
+async function load_config(name) {
+  try {
+    const content = await invoke("load_json", { jsonName: name });
+    return content;
+  } catch (err) {
+    alert("Ошибка " + err);
+  }
+}
 
+function App() {
+  const {inputData, appData, setAppData, airports, setAirports, validationRules, setValidationRules} = useProject();
+  const [errors, setErrors] = useState([]);
 
   const appTabs = [
     {
@@ -37,27 +45,35 @@ function App() {
   ]
 
   useEffect(() => {
-    if (!config?.common_conditions) return;
-    const validator = new Validator(config.common_conditions, inputData);
+    if (!validationRules?.common_rules) return;
+    const validator = new Validator(validationRules.common_rules, inputData);
     const validatedErrors = validator.validate();
     setErrors(validatedErrors);
 
-  }, [inputData, config]);
+  }, [inputData, validationRules]);
 
   useEffect(() => {
-    async function load_config() {
+    const fetchConfigs = async () => {
       try {
-        const content = await invoke("load_json", { jsonName: "config.json" });
-        setConfig(content);
+        if (!appData) {
+          const appContent = await load_config("app-data.json");
+          setAppData(appContent);
+        }
+        if (!airports) {
+          const airportsContent = await load_config("airports.json");
+          setAirports(airportsContent.airports);
+        }
+        if (!validationRules) {
+          const validationRulesContent = await load_config("validation-rules.json");
+          setValidationRules(validationRulesContent);
+        }
       } catch (err) {
-        alert("Ошибка " + err);
+        console.error("Ошибка загрузки конфигов:", err);
       }
-    }
+    };
 
-    if (!config) {
-      load_config();
-    }
-  }, [])
+    fetchConfigs();
+  }, []);
 
   return (
     <div className="app-main">

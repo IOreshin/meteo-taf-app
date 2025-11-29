@@ -1,0 +1,19 @@
+{
+    "airports" : [
+        { 
+            "code": "UUEE", 
+            "city": "Москва" },
+        { 
+            "code": "ULLI", 
+            "city": "Санкт-Петербург" },
+        { 
+            "code": "EDDF", 
+            "city": "Франкфурт" },
+        { 
+            "code": "ULMM", 
+            "city": "Мурманск" },
+        { 
+            "code": "ULMK", 
+            "city": "Апатиты"}
+    ]
+}

@@ -3,19 +3,19 @@ import "./WeatherEventsFrame.css"
 import { AutoComplete, Input } from "antd";
 
 export function WeatherEventRow({value, onChange}){
-    const {config} = useProject();
+    const {appData} = useProject();
 
-    const intensityOptions = config?.intensity?.map(c => ({
+    const intensityOptions = appData?.intensity?.map(c => ({
         value: c.intensity,
         label: `${c.intensity} - ${c.description}`
     })) || [];
 
-    const descriptorOptions = config?.descriptor?.map(c => ({
+    const descriptorOptions = appData?.descriptor?.map(c => ({
         value: c.descriptor,
         label: `${c.descriptor} - ${c.description}`
     })) || [];
 
-    const weatherEventsOptions = config?.weather_events?.map(c => ({
+    const weatherEventsOptions = appData?.weather_events?.map(c => ({
         value: c.event,
         label: `${c.event} - ${c.description}`
     })) || [];

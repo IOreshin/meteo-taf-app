@@ -4,16 +4,16 @@ import { useProject } from "../context/ProjectContext";
 
 export function AirportSelect({onDataChange}){
     const [options, setOptions] = useState([]);
-    const {config} = useProject();
+    const {airports} = useProject();
 
     const handleSearch = (value) => {
         if (!value) {
             setOptions([]);
             return;
         }
-        if (!config) return;
+        if (!airports) return;
 
-        const filtered = config.airports
+        const filtered = airports
             .filter(a => 
                 a.code.toLowerCase().includes(value.toLowerCase()) ||
                 a.city.toLowerCase().includes(value.toLowerCase())

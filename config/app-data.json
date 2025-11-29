@@ -1,0 +1,188 @@
+{
+    "intensity" : [
+        {
+            "intensity" : "",
+            "description" : "Отсутсвует характеристика"
+        },
+        {
+            "intensity" : "-",
+            "description" : "Слабая"
+        },
+        {
+            "intensity" : "+",
+            "description" : "Сильная"
+        },
+        {
+            "intensity" : "VC",
+            "description" : "Вблизи"
+        }
+    ],
+
+    "descriptor" : [
+        {
+            "descriptor" : "",
+            "description" : "Отсутсвует характеристика"
+        },
+        {
+            "descriptor" : "SH",
+            "description" : "Ливневой"
+        },
+        {
+            "descriptor" : "DR",
+            "description" : "Поземок"
+        },
+        {
+            "descriptor" : "BL",
+            "description" : "Низ. метель"
+        },
+        {
+            "descriptor" : "TS",
+            "description" : "Гроза"
+        },
+        {
+            "descriptor" : "FZ",
+            "description" : "Переохл."
+        },
+        {
+            "descriptor" : "MI",
+            "description" : "Тонкий"
+        },
+        {
+            "descriptor" : "BC",
+            "description" : "Клочья"
+        },
+        {
+            "descriptor" : "PR",
+            "description" : "Частичный"
+        }
+    ],
+
+    "weather_events" : [
+        {
+            "event" : "",
+            "description" : "Отсутсвует характеристика"
+        },
+        {
+            "event" : "RA",
+            "description" : "Дождь"
+        },
+        {
+            "event" : "DZ",
+            "description" : "Морось"
+        },
+        {
+            "event" : "SN",
+            "description" : "Снег"
+        },
+        {
+            "event" : "SG",
+            "description" : "Снежные зерна"
+        },
+        {
+            "event" : "PL",
+            "description" : "Ледяная крупа"
+        },
+        {
+            "event" : "IC",
+            "description" : "Ледяные кристаллы"
+        },
+        {
+            "event" : "GR",
+            "description" : "Град"
+        },
+        {
+            "event" : "GS",
+            "description" : "Град или снежн. крупа"
+        },
+        {
+            "event" : "BR",
+            "description" : "Дымка"
+        },
+        {
+            "event" : "FG",
+            "description" : "Туман"
+        },
+        {
+            "event" : "FU",
+            "description" : "Дым"
+        },
+        {
+            "event" : "HZ",
+            "description" : "Мгла"
+        },
+        {
+            "event" : "SA",
+            "description" : "Песок"
+        },
+        {
+            "event" : "DU",
+            "description" : "Пыль"
+        },
+        {
+            "event" : "VA",
+            "description" : "Вулк. пепел"
+        },
+        {
+            "event" : "SQ",
+            "description" : "Шквал"
+        },
+        {
+            "event" : "SS",
+            "description" : "Песчаная буря"
+        },
+        {
+            "event" : "DS",
+            "description" : "Пыльн./песч. вихри"
+        },
+        {
+            "event" : "FC",
+            "description" : "Смерч"
+        }
+    ],
+
+    "clouds_amount" : [
+        {
+            "amount" : "SKC",
+            "description" : "Ясное небо"
+        },
+        {
+            "amount" : "CLR",
+            "description" : "Ясное небо"
+        },
+        {
+            "amount" : "FEW",
+            "description" : "Несколько облаков"
+        },
+        {
+            "amount" : "SCT",
+            "description" : "Рассеянные облака"
+        },
+        {
+            "amount" : "BKN",
+            "description" : "Значительная облачность"
+        },
+        {
+            "amount" : "OVN",
+            "description" : "Полная облачность"
+        },
+        {
+            "amount" : "VV",
+            "description" : ""
+        }
+    ],
+
+    "clouds_type" : [
+        {
+            "type" : "",
+            "description" : "Отсутсвует характеристика"
+        },
+        {
+            "type" : "CB",
+            "description" : "Облака кучево-дождевые или кучево-кучевые"
+        },
+        {
+            "type" : "TCU",
+            "description" : "Облака кучево-дождевые или кучево-кучевые"
+        }
+    ]
+}

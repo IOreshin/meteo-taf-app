@@ -1,0 +1,81 @@
+{
+    "common_rules": [
+        {
+            "message":"Время выпуска не может быть позднее начала работы прогноза",
+            "conditions": [
+                {
+                    "logic_link": "None",
+                    "left": {
+                        "type": "expr",
+                        "field": "issue_time",
+                        "func": "to_int",
+                        "expr": "field/100+1"
+                    },
+                    "operator": ">",
+                    "right": {
+                        "type": "field",
+                        "field": "time_from",
+                        "func": "to_int"
+                    }
+                }
+            ]
+        },
+        {
+        "message": "Порыв ветра должен превышать среднюю скорость ветра на 5 м/c",
+            "conditions": [
+                {
+                    "logic_link": "None",
+                    "left": {
+                        "type": "expr",
+                        "field": "wind_speed",
+                        "func": "to_int",
+                        "expr": "field+5"
+                    },
+                    "operator": ">",
+                    "right": {
+                        "type": "field",
+                        "field": "wind_gust",
+                        "func": "to_int"
+                    }
+                    },
+                    {
+                    "logic_link": "AND",
+                    "left": {
+                        "type": "field",
+                        "field": "wind_gust"
+                    },
+                    "operator": "!=",
+                    "right": {
+                        "type": "value",
+                        "value" : "0"
+                    }
+                }
+            ]
+        }
+    ],
+
+    "weather_code_rules" : [
+        {
+            "code" : "+SN",
+            "conditions" : [
+                {
+                    "check": "to_int(visibility) <= 1500",
+                    "message": "При сильном снеге видимость должна быть ≤ 1500 м"
+                },
+                {
+                    "check" : "to_int(wind_speed) < 20",
+                    "message" : "При сильном снеге не может быть такого ветра"
+                }
+            ]
+            },
+            {
+            "code" : "FG",
+            "conditions" : [
+                {
+                    "check": "to_int(visibility) <= 1000",
+                    "message": "При тумане видимость должна быть ≤ 1000 м"
+                }
+            ]
+        }
+    ]
+}

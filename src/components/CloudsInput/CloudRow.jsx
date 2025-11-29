@@ -3,14 +3,14 @@ import { useProject } from "../../context/ProjectContext";
 import "./CloudsFrame.css"
 
 export function CloudRow({value, onChange}){
-    const {config} = useProject();
+    const {appData} = useProject();
 
-    const amountOptions = config?.clouds_amount?.map(c => ({
+    const amountOptions = appData?.clouds_amount?.map(c => ({
         value: c.amount,
         label: `${c.amount} - ${c.description}`
     })) || [];
 
-    const typeOptions = config?.clouds_type?.map(c => ({
+    const typeOptions = appData?.clouds_type?.map(c => ({
         value: c.type,
         label: c.type ? `${c.type} - ${c.description}` : "Нет характеристики"
     })) || [];

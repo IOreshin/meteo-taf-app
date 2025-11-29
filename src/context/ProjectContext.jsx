@@ -7,7 +7,6 @@ export function useProject() {
 }
 
 export function ProjectProvider({ children }) {
-    const [config, setConfig] = useState(null);
     const [inputData, setInputData] = useState({
         "0": {
             city: "",
@@ -22,11 +21,16 @@ export function ProjectProvider({ children }) {
             clouds_entries: []
         }
     });
+    const [appData, setAppData] = useState(null);
+    const [airports, setAirports] = useState(null);
+    const [validationRules, setValidationRules] = useState(null);
 
     return (
         <ProjectContext.Provider value={{
-            config, setConfig,
-            inputData, setInputData
+            inputData, setInputData,
+            appData, setAppData,
+            airports, setAirports,
+            validationRules, setValidationRules
         }}>
             {children}
         </ProjectContext.Provider>
