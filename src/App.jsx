@@ -9,6 +9,7 @@ import { useProject } from "./context/ProjectContext";
 import { ValidationPanel } from "./components/ValidationPanel";
 import { ConditionsPanel } from "./components/ConditionsPanel/ConditionsPanel";
 import { Validator } from "./components/Validator/Validator";
+import { About } from "./components/About";
 
 async function load_config(name) {
   try {
@@ -44,6 +45,12 @@ function App() {
         <div>
           <ConditionsPanel />
         </div>
+    },
+    {
+      key: '3',
+      label: 'Справка',
+      children:
+        <About />
     }
   ]
 
@@ -84,7 +91,7 @@ function App() {
         <Layout style={{ width: "100%", height: "100vh" }}>
           <Layout>
             <Header>meteo-taf</Header>
-            <Content style={{ display: "flex", flexDirection: "column" }}>
+            <Content style={{ display: "flex", flexDirection: "column" , overflowY:"auto"}}>
               <Tabs 
                 items={appTabs}
                 type="card"
