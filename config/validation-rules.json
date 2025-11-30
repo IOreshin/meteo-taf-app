@@ -63,29 +63,6 @@
           }
         }
       ]
-    },
-    {
-      "message": "Порыв ветра не должен превышать 30 м/c",
-      "conditions": [
-        {
-          "logic_link": "None",
-          "left": {
-            "type": "expr",
-            "field": "wind_gust",
-            "func": "to_int",
-            "expr": "field",
-            "value": null
-          },
-          "operator": ">",
-          "right": {
-            "type": "value",
-            "field": null,
-            "func": null,
-            "expr": null,
-            "value": "30"
-          }
-        }
-      ]
     }
   ],
   "rules_by_code": [
@@ -111,34 +88,6 @@
                 "func": null,
                 "expr": null,
                 "value": "1500"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "code": "FG",
-      "rules": [
-        {
-          "message": "При тумане видимость должна быть < 1000 м",
-          "conditions": [
-            {
-              "logic_link": "None",
-              "left": {
-                "type": "field",
-                "field": "visibility",
-                "func": "to_int",
-                "expr": null,
-                "value": null
-              },
-              "operator": ">",
-              "right": {
-                "type": "value",
-                "field": null,
-                "func": null,
-                "expr": null,
-                "value": "1000"
               }
             }
           ]

@@ -105,6 +105,51 @@ fn save_code_rule(code: String, rule: Rule) -> Result<(), String> {
     Ok(())
 }
 
+#[command]
+fn delete_common_rule(message: String) -> Result<(), String> {
+    use std::fs;
+
+    let path = get_json_path("validation-rules.json")?;
+    let mut json = load_or_create_json(path.to_str().ok_or("Invalid path")?)?;
+
+    // фильтруем, оставляя только правила с другим message
+    json.common_rules.retain(|r| r.message != message);
+
+    let updated = serde_json::to_string_pretty(&json)
+        .map_err(|e| e.to_string())?;
+
+    fs::write(&path, updated)
+        .map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
+#[command]
+fn delete_code_rule(code: String, message: String) -> Result<(), String> {
+    use std::fs;
+
+    let path = get_json_path("validation-rules.json")?;
+    let mut json = load_or_create_json(path.to_str().ok_or("Invalid path")?)?;
+
+    // ищем блок с кодом
+    if let Some(code_block) = json.rules_by_code.iter_mut().find(|c| c.code == code) {
+        code_block.rules.retain(|r| r.message != message);
+
+        // если после удаления список пуст — можно автоматически удалить сам блок
+        if code_block.rules.is_empty() {
+            json.rules_by_code.retain(|c| c.code != code);
+        }
+    }
+
+    let updated = serde_json::to_string_pretty(&json)
+        .map_err(|e| e.to_string())?;
+
+    fs::write(&path, updated)
+        .map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
 
 fn get_json_path(json_name: &str) -> Result<PathBuf, String> {
     // Папка с exe
@@ -150,7 +195,9 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             load_json,
             save_common_rule,
-            save_code_rule
+            save_code_rule,
+            delete_code_rule,
+            delete_common_rule
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

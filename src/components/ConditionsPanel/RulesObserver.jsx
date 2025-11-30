@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { useProject } from "../../context/ProjectContext"
 import "./RulesObserver.css"
 import React, {useState} from "react";
-import { Card, Select } from "antd";
+import { Button, Card, Select } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { invoke } from "@tauri-apps/api/core";
 
 function formatSide(side) {
     if (!side) return "";
@@ -43,7 +45,7 @@ const observerTypeItems = [
 ]
 
 export function RulesObserver() {
-    const {validationRules} = useProject();
+    const {validationRules, setAppDataNeedReload} = useProject();
     const [commonRules, setCommonRules] = useState([]);
     const [rulesByCode, setRulesByCode] = useState([]);
     const [codeList, setCodeList] = useState([]);
@@ -70,6 +72,16 @@ export function RulesObserver() {
         setRulesByCode(validationRules.rules_by_code);
 
     }, [validationRules])
+
+    const deleteRule = async (message, code = "") => {
+        if (code === "") {
+            await invoke("delete_common_rule", { message });
+        } else {
+            await invoke("delete_code_rule", { code, message });
+        }
+        
+        setAppDataNeedReload(true);
+    }
 
     return (
         <div>
@@ -98,7 +110,17 @@ export function RulesObserver() {
                     observerType == "common" 
                     ?   <div>
                             {commonRules.map(rule => (
-                                <Card key={rule.key} title={rule.message}>
+                                <Card 
+                                    key={rule.key} 
+                                    title={rule.message}
+                                    extra={
+                                        <Button
+                                            onClick={(v) => deleteRule(rule.message)} 
+                                        >
+                                            <DeleteOutlined/>
+                                        </Button>}
+                                       
+                                >
                                     {rule.conditions.map((c, idx) => (
                                         <div key={idx} style={{paddingLeft: 10}}>
                                             {c}
@@ -114,7 +136,16 @@ export function RulesObserver() {
                                 .map((codeRule, index) => (
                                     <div key = {index}>
                                         {codeRule.rules.map((rule, rIndex) => (
-                                            <Card key={rIndex} title={rule.message}>
+                                            <Card 
+                                                key={rIndex}
+                                                title={rule.message}
+                                                extra={
+                                                    <Button
+                                                        onClick={(v) => deleteRule(rule.message, codeRule.code)} 
+                                                    >
+                                                        <DeleteOutlined/>
+                                                    </Button>}    
+                                            >
                                                 {rule.conditions.map((c, idx) => (
                                                     <div key={idx}>
                                                         {formatCondition(c)}
